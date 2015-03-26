@@ -22,13 +22,15 @@ class PowerAPI
             $url = $url;
         }
 
-        $client = new \Zend\Soap\Client();
-        $client->setOptions(Array(
+        $client = new \Zend\Soap\Client(null, Array(
             'uri' => 'http://publicportal.rest.powerschool.pearson.com/xsd',
             'location' => $url.'pearson-rest/services/PublicPortalServiceJSON',
             'login' => 'pearson',
             'password' => 'm0bApP5',
-            'use' => SOAP_LITERAL
+            'use' => SOAP_LITERAL,
+            'stream_context' => stream_context_create(array(
+                'ssl' => array('ciphers'=>'RC4-SHA SSLv3')
+            )),
         ));
 
         $login = $client->__call(
