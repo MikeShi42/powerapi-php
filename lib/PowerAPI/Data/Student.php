@@ -60,7 +60,10 @@ class Student extends BaseObject
             'location' => $this->soap_url.'pearson-rest/services/PublicPortalServiceJSON',
             'login' => 'pearson',
             'password' => 'm0bApP5',
-            'use' => SOAP_LITERAL
+            'use' => SOAP_LITERAL,
+            'stream_context' => stream_context_create(array(
+                'ssl' => array('ciphers'=>'RC4-SHA SSLv3')
+            )),
         ));
 
         // This is a workaround for SoapClient not having a WSDL to go off of.
@@ -84,6 +87,8 @@ class Student extends BaseObject
 
         $transcript = $client->__call('getStudentData', $parameters);
 
+        //var_dump($transcript);
+
         return $transcript;
     }
 
@@ -96,9 +101,13 @@ class Student extends BaseObject
     {
         $studentData = $transcript->studentDataVOs;
 
+        //Expose full transcript
+        $this->details['transcript'] = $transcript;
+
         $this->details['information'] = $studentData->student;
 
         $assignmentCategories = \PowerAPI\Parser::assignmentCategories($studentData->assignmentCategories);
+        //var_dump($transcript);
         $assignmentScores = \PowerAPI\Parser::assignmentScores($studentData->assignmentScores);
         $finalGrades = \PowerAPI\Parser::finalGrades($studentData->finalGrades);
         $reportingTerms = \PowerAPI\Parser::reportingTerms($studentData->reportingTerms);
