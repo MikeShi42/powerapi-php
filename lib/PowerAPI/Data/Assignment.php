@@ -7,6 +7,7 @@ namespace PowerAPI\Data;
  * @property array $description assignment's description
  * @property string $name assignment's name
  * @property string $score assignment's score as defined by the teacher
+ * @property string $pointspossible assignment's total possible score as defined by the teacher
  * @property array $percent assignment's score out of 100
 */
 class Assignment extends BaseObject
@@ -18,6 +19,9 @@ class Assignment extends BaseObject
      */
     public function __construct($details)
     {
+        //var_dump($details);
+        $this->details['date'] = \DateTime::createFromFormat("Y-m-d*H:i:s.uT", $details['assignment']->dueDate);
+        //$this->details['realDate'] = $details['assignment']->dueDate;
         $this->details['category'] = $details['category']->name;
         $this->details['description'] = $details['assignment']->description;
         $this->details['name'] = $details['assignment']->name;
@@ -27,6 +31,11 @@ class Assignment extends BaseObject
         } else {
             $this->details['percent'] = null;
             $this->details['score'] = null;
+        }
+        if($details['assignment']->pointspossible !== null){
+            $this->details['pointspossible'] = $details['assignment']->pointspossible;
+        } else {
+            $this->details['pointspossible'] = null;
         }
     }
 }
