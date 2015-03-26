@@ -23,13 +23,17 @@ class Section extends BaseObject
 
         $this->details['expression'] = $details['section']->expression;
 
+
         if ($details['finalGrades'] !== null) {
             $this->details['finalGrades'] = Array();
 
-            foreach ($this->details['finalGrades'] as $finalGrade) {
+            foreach ($details['finalGrades'] as $finalGrade) {
                 $this->details['finalGrades'][
                     $details['reportingTerms'][$finalGrade->reportingTermId]
-                ] = $finalGrade->percent;
+                ] = (object)array(
+                    'percent'=> $finalGrade->percent,
+                    'letter' => $finalGrade->grade
+                );
             }
         } else {
             $this->details['finalGrades'] = null;
